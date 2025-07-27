@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4f46e5;
+            --secondary: #6366f1;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
+        
+        .profile-section {
+            transition: all 0.3s ease;
+        }
+        
+        .edit-mode .profile-section {
+            background-color: #f5f7fa;
+            border: 1px dashed #d1d5db;
+        }
+        
+        input:disabled, textarea:disabled {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            cursor: default !important;
+            padding-left: 0 !important;
+        }
+        
+        .profile-image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+        
+        .profile-image-container:hover .profile-overlay {
+            opacity: 1;
+        }
+        
+        .profile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn {
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="flex justify-between items-center mb-8">
+            <button id="backBtn" class="btn bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg shadow-sm">
+                Back
+            </button>
+            <h1 class="text-3xl font-bold text-gray-800">My Seller Profile</h1>
+            <button id="editToggleBtn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-sm">
+                Edit Profile
+            </button>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden p-8 mb-8">
+            <!-- Profile Image Section -->
+            <div class="flex flex-col items-center mb-8">
+                <div class="profile-image-container mb-4">
+                    <img src="https://placehold.co/600x600" alt="Professional headshot of a business owner standing in their store" 
+                         class="w-full h-full rounded-lg object-cover" id="profileImage">
+                    <div class="profile-overlay hidden edit-mode">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span class="text-sm">Change Photo</span>
+                        <input type="file" id="imageUpload" accept="image/*" class="hidden">
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500">Supports JPG, PNG up to 5MB</p>
+            </div>
+            
+            <!-- Personal Information Section -->
+            <div class="profile-section mb-8 p-6 rounded-lg bg-gray-50">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">Personal Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <input type="text" id="firstName" value="John" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <input type="text" id="lastName" value="Doe" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" value="john.doe@example.com" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input type="tel" id="phone" value="(555) 123-4567" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Business Information Section -->
+            <div class="profile-section mb-8 p-6 rounded-lg bg-gray-50">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">Business Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label for="businessName" class="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
+                        <input type="text" id="businessName" value="Doe's Electronics" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="businessDesc" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea id="businessDesc" rows="3" disabled
+                                  class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">Specializing in consumer electronics and technical support since 2012.</textarea>
+                    </div>
+                    <div>
+                        <label for="website" class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                        <input type="url" id="website" value="www.doeselectronics.com" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="taxId" class="block text-sm font-medium text-gray-700 mb-1">Tax ID</label>
+                        <input type="text" id="taxId" value="12-3456789" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Address Section -->
+            <div class="profile-section p-6 rounded-lg bg-gray-50">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">Business Address</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label for="streetAddress" class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
+                        <input type="text" id="streetAddress" value="123 Main Street" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                        <input type="text" id="city" value="San Francisco" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State/Province</label>
+                        <input type="text" id="state" value="California" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-1">Zip/Postal Code</label>
+                        <input type="text" id="zipCode" value="94105" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                        <input type="text" id="country" value="United States" disabled
+                               class="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons (Hidden by default) -->
+            <div id="actionButtons" class="flex justify-end space-x-4 mt-8 hidden">
+                <button id="cancelBtn" class="btn bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 px-6 py-2 rounded-lg shadow-sm">
+                    Cancel
+                </button>
+                <button id="saveBtn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-sm">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editToggleBtn = document.getElementById('editToggleBtn');
+            const actionButtons = document.getElementById('actionButtons');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const backBtn = document.getElementById('backBtn');
+            const imageUpload = document.getElementById('imageUpload');
+            const profileImage = document.getElementById('profileImage');
+            const inputs = document.querySelectorAll('input, textarea');
+            const profileSections = document.querySelectorAll('.profile-section');
+            const profileOverlay = document.querySelector('.profile-overlay');
+            
+            let isEditMode = false;
+            let originalValues = {};
+            
+            // Store original values when entering edit mode
+            function storeOriginalValues() {
+                originalValues = {};
+                inputs.forEach(input => {
+                    originalValues[input.id] = input.value;
+                });
+            }
+            
+            // Toggle edit mode
+            function toggleEditMode() {
+                isEditMode = !isEditMode;
+                document.body.classList.toggle('edit-mode');
+                
+                if (isEditMode) {
+                    storeOriginalValues();
+                    editToggleBtn.textContent = 'View Mode';
+                    actionButtons.classList.remove('hidden');
+                    profileOverlay.classList.remove('hidden');
+                } else {
+                    editToggleBtn.textContent = 'Edit Profile';
+                    actionButtons.classList.add('hidden');
+                    profileOverlay.classList.add('hidden');
+                }
+                
+                // Toggle input states
+                inputs.forEach(input => {
+                    input.disabled = !isEditMode;
+                    
+                    if (isEditMode) {
+                        input.style.borderColor = '#d1d5db';
+                        input.style.borderBottomWidth = '1px';
+                        input.style.paddingLeft = '12px';
+                    } else {
+                        input.style.borderColor = 'transparent';
+                        input.style.borderBottomWidth = '1px';
+                        input.style.paddingLeft = '0';
+                    }
+                });
+                
+                // Highlight sections in edit mode
+                profileSections.forEach(section => {
+                    section.style.backgroundColor = isEditMode ? '#f5f7fa' : '';
+                    section.style.borderWidth = isEditMode ? '1px' : '0';
+                });
+            }
+            
+            // Reset form to original values
+            function resetForm() {
+                Object.keys(originalValues).forEach(key => {
+                    const input = document.getElementById(key);
+                    if (input) input.value = originalValues[key];
+                });
+            }
+            
+            // Handle image upload
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        profileImage.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Event listeners
+            editToggleBtn.addEventListener('click', toggleEditMode);
+            cancelBtn.addEventListener('click', function() {
+                resetForm();
+                toggleEditMode();
+            });
+            saveBtn.addEventListener('click', function() {
+                // Here you would typically send data to server
+                alert('Profile changes saved successfully!');
+                toggleEditMode();
+            });
+            backBtn.addEventListener('click', function() {
+                window.history.back(); // Navigate back to the previous page
+            });
+        });
+    </script>
+</body>
+</html>
